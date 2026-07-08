@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff — Je Raconte, Tu T'envoles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Literata:ital,wght@0,400;0,500;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="brand">Je Raconte, <span>Tu T'envoles</span></div>
+  <ul>
+    <li><a href="/#compagnie">La Compagnie</a></li>
+    <li><a href="/#artistes">Les Artistes</a></li>
+    <li><a href="/#spectacles">Spectacles</a></li>
+    <li><a href="/#ateliers">Ateliers</a></li>
+    <li><a href="/nos-comptes/">Nos Comptes</a></li>
+    <li><a href="/staff/">Staff</a></li>
+  </ul>
+</nav>
+
+<section class="inner-page">
+  <div class="inner-wrap">
+    <div class="acte-tag">Espace privé</div>
+    <h1 class="titre">Staff — <em>Gestion des comptes</em></h1>
+
+    <form class="staff-form" id="compte-form">
+      <div class="form-row">
+        <label for="titre">Titre</label>
+        <input type="text" id="titre" placeholder="Ex : Set live au Café des Arts" required>
+      </div>
+      <div class="form-row">
+        <label for="comptes">Texte</label>
+        <textarea id="comptes" rows="3" placeholder="Ex : petite description, texte libre..." required></textarea>
+      </div>
+      <div class="form-row">
+        <label for="audio">Lien vers audio</label>
+        <input type="url" id="audio" placeholder="https://...">
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-amber">Ajouter</button>
+        <span class="form-msg" id="form-msg">Ajouté !</span>
+      </div>
+    </form>
+
+    <div class="acte-tag">Comptes enregistrés</div>
+    <div class="staff-list" id="staff-list"></div>
+
+    <div class="acte-tag" style="margin-top:3rem;">Modifier le site</div>
+    <form class="staff-form" id="site-form">
+      <div class="form-row"><label>Accroche (hero)</label><textarea id="f_hero_lead" rows="2"></textarea></div>
+      <div class="form-row"><label>La Compagnie — 1er paragraphe</label><textarea id="f_compagnie_p1" rows="4"></textarea></div>
+      <div class="form-row"><label>Bio de Pascale</label><textarea id="f_pascale_bio" rows="4"></textarea></div>
+      <div class="form-row"><label>Bio de Michel</label><textarea id="f_michel_bio" rows="4"></textarea></div>
+      <div class="form-row"><label>Spectacle 1 — Titre</label><textarea id="f_spec1_titre" rows="1"></textarea></div>
+      <div class="form-row"><label>Spectacle 1 — Description</label><textarea id="f_spec1_desc" rows="3"></textarea></div>
+      <div class="form-row"><label>Spectacle 2 — Titre</label><textarea id="f_spec2_titre" rows="1"></textarea></div>
+      <div class="form-row"><label>Spectacle 2 — Description</label><textarea id="f_spec2_desc" rows="3"></textarea></div>
+      <div class="form-row"><label>Spectacle 3 — Titre</label><textarea id="f_spec3_titre" rows="1"></textarea></div>
+      <div class="form-row"><label>Spectacle 3 — Description</label><textarea id="f_spec3_desc" rows="3"></textarea></div>
+      <div class="form-row"><label>Accroche Contact</label><textarea id="f_contact_lead" rows="2"></textarea></div>
+      <div class="form-actions">
+        <button type="submit" class="btn-amber">Enregistrer les modifications</button>
+        <span class="form-msg" id="site-form-msg">Enregistré !</span>
+      </div>
+    </form>
+  </div>
+</section>
+
+<footer>© Je Raconte, Tu T'envoles — Espace Staff</footer>
+
+<script>
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  async function getComptes(){
+    const { data, error } = await sb
+      .from('comptes')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if(error){ console.error(error); return []; }
+    return data;
+  }
+
+  async function renderList(){
+    const list = await getComptes();
+    const container = document.getElementById('staff-list');
+    container.innerHTML = '';
+    if(list.length === 0){
+      container.innerHTML = '<p class="empty-note">Aucun compte enregistré pour l\'instant.</p>';
+      return;
+    }
+    list.forEach((c) => {
+      const row = document.createElement('div');
+      row.className = 'staff-row';
+      row.innerHTML = `
+        <div><span class="lbl">Titre</span>${c.titre}</div>
+        <div><span class="lbl">Texte</span>${c.texte}</div>
+        <div><span class="lbl">Lien audio</span>${c.lien_audio ? `<a class="lien" href="${c.lien_audio}" target="_blank" rel="noopener">${c.lien_audio}</a>` : '—'}</div>
+        <button class="del-btn" data-id="${c.id}">Supprimer</button>
+      `;
+      container.appendChild(row);
+    });
+    container.querySelectorAll('.del-btn').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        const { error } = await sb.from('comptes').delete().eq('id', btn.dataset.id);
+        if(error) console.error(error);
+        renderList();
+      });
+    });
+  }
+
+  document.getElementById('compte-form').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const titre = document.getElementById('titre').value.trim();
+    const texte = document.getElementById('comptes').value.trim();
+    const lien_audio = document.getElementById('audio').value.trim();
+    if(!titre || !texte) return;
+
+    const { error } = await sb.from('comptes').insert([{ titre, texte, lien_audio }]);
+    if(error){ console.error(error); return; }
+
+    document.getElementById('compte-form').reset();
+    const msg = document.getElementById('form-msg');
+    msg.classList.add('show');
+    setTimeout(()=>msg.classList.remove('show'), 1800);
+
+    renderList();
+  });
+
+  renderList();
+</script>
+
+<script>
+  // Gestion du contenu éditable du site (table site_content)
+  const CONTENT_FIELDS = [
+    'hero_lead','compagnie_p1','pascale_bio','michel_bio',
+    'spec1_titre','spec1_desc','spec2_titre','spec2_desc','spec3_titre','spec3_desc',
+    'contact_lead'
+  ];
+
+  // Textes actuellement présents sur le site (valeurs par défaut, utilisées si rien n'a encore été enregistré)
+  const DEFAULT_CONTENT = {
+    hero_lead: "Conte, musique et improvisation — une compagnie qui fait voyager petits et grands, une histoire à la fois.",
+    compagnie_p1: "Pascale a grandi en lisant et en dévorant des histoires. Sa rencontre avec la conteuse Catherine Zarcate a été déterminante dans son envie de raconter à son tour. Elle est ensuite passée par un conservatoire d'art dramatique, puis par la scène, avant une première soirée de contes d'Orient devant un public.",
+    pascale_bio: "Passionnée d'imaginaire depuis toujours, Pascale a suivi son instinct plutôt qu'un chemin tout tracé : théâtre, maternité, animation, puis conte, écriture et dessin. Elle résume aujourd'hui son parcours d'une formule simple : « J'ai réalisé mon rêve ».",
+    michel_bio: "Michel s'est intéressé très jeune à la musique. Il a commencé par la basse électrique, en jouant dans des orchestres de bal, de rock, de blues, de jazz swing et de musique cajun. Il est ensuite passé à la contrebasse, ce qui l'a conduit vers le jazz manouche, le New Orleans et la salsa. Il accompagne aujourd'hui les spectacles de contes.",
+    spec1_titre: "Les Mésaventures de Bergamote",
+    spec1_desc: "En Périgord, à la saison des citrouilles, l'apprentie sorcière Bergamote doit réussir sa dernière épreuve : cuisiner le plat préféré de la reine, le millas. Musique, marionnettes et kamishibaï accompagnent ce conte plein de malice.",
+    spec2_titre: "Contes du Désir & Jean le Gabarier",
+    spec2_desc: "Nés d'une carte blanche autour du Périgord, ces récits suivent notamment Jean, jeune marinier de la Dordogne qui apprend, au fil de l'eau, à aimer la nature plutôt qu'à la combattre.",
+    spec3_titre: "Spectacle sur-mesure",
+    spec3_desc: "Conçus avec vous pour un lieu ou un projet précis — comme « Le Train de Noël », imaginé avec le syndicat d'initiative de Niversac (24). Ces spectacles peuvent s'accompagner d'ateliers d'expression ou artistiques.",
+    contact_lead: "Pour un spectacle, un atelier ou une envie encore floue — écrivez-nous, le rideau n'attend que vous."
+  };
+
+  async function loadSiteContent(){
+    // 1. Pré-remplir avec les valeurs par défaut du site
+    CONTENT_FIELDS.forEach(key => {
+      const el = document.getElementById('f_' + key);
+      if(el) el.value = DEFAULT_CONTENT[key] || '';
+    });
+    // 2. Écraser avec ce qui a déjà été enregistré dans Supabase, s'il y en a
+    try{
+      const { data, error } = await sb.from('site_content').select('content').eq('id', 1).single();
+      if(error || !data) return;
+      const content = data.content || {};
+      CONTENT_FIELDS.forEach(key => {
+        const el = document.getElementById('f_' + key);
+        if(el && content[key]) el.value = content[key];
+      });
+    }catch(e){ console.warn(e); }
+  }
+
+  document.getElementById('site-form').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const content = {};
+    CONTENT_FIELDS.forEach(key => {
+      const el = document.getElementById('f_' + key);
+      if(el && el.value.trim()) content[key] = el.value.trim();
+    });
+    const { error } = await sb.from('site_content').upsert({ id: 1, content, updated_at: new Date().toISOString() });
+    if(error){ console.error(error); return; }
+    const msg = document.getElementById('site-form-msg');
+    msg.classList.add('show');
+    setTimeout(()=>msg.classList.remove('show'), 1800);
+  });
+
+  loadSiteContent();
+</script>
+</body>
+</html>
