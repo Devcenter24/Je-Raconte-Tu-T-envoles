@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; media-src 'self' data: https:; connect-src 'self' https://*.supabase.co;">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spectacle Adultes — Je Raconte, Tu T'envoles</title>
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Literata:ital,wght@0,400;0,500;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.2/dist/umd/supabase.js" integrity="sha384-yifgV8iFWyp5cgu+V1G1rtlEHpEErPlL5fTrkUELIsWq0CIVDON2WP/NlXVJT3vO" crossorigin="anonymous"></script>
+<script src="../config.js"></script>
+</head>
+<body data-categorie="spectacles_adultes">
+
+<nav>
+  <div class="brand">Je Raconte, <span>Tu T'envoles</span></div>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <ul id="nav-menu">
+    <li><a href="../index.html#compagnie">La Compagnie</a></li>
+    <li><a href="../index.html#artistes">Les Artistes</a></li>
+    <li><a href="../index.html#spectacles">Spectacles</a></li>
+    <li><a href="../index.html#ateliers">Ateliers</a></li>
+    <li><a href="../nos-contes/index.html">Nos Contes</a></li>
+  </ul>
+</nav>
+<div class="nav-overlay" id="nav-overlay"></div>
+
+<section class="inner-page">
+  <div class="inner-wrap">
+    <div class="acte-tag">Répertoire</div>
+    <h1 class="titre">Spectacle <em>Adultes</em></h1>
+    <div class="blocs-container" id="blocs-container">
+      <p class="empty-note" id="blocs-empty">Contenu à venir — cette page fait partie de la structure du répertoire, son contenu sera ajouté à la prochaine étape.</p>
+    </div>
+    <p class="lien-retour-wrap"><a href="../index.html#spectacles" class="lien-retour">&larr; Retour à la carte mentale</a></p>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="footer-logo">Je Raconte, Tu T'envoles</span>
+      <p>Conte, musique et improvisation en Périgord — une compagnie qui fait voyager petits et grands.</p>
+    </div>
+    <div class="footer-nav">
+      <div class="footer-col-title">Navigation</div>
+      <div class="footer-links">
+        <a href="../index.html#compagnie">La Compagnie</a>
+        <a href="../index.html#artistes">Les Artistes</a>
+        <a href="../index.html#spectacles">Spectacles</a>
+        <a href="../index.html#ateliers">Ateliers</a>
+        <a href="../nos-contes/index.html">Nos Contes</a>
+      </div>
+    </div>
+    <div class="footer-contact-wrap">
+      <div class="footer-col-title">Contact</div>
+      <div class="footer-contact">
+        <a href="mailto:jeracontetutenvoles@gmail.com">jeracontetutenvoles@gmail.com</a>
+        <span>Pascale Gaudin — 06 28 41 26 92</span>
+        <a class="footer-youtube" href="https://www.youtube.com/@jeracontetutenvoles" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><rect class="yt-bg" x="1" y="4" width="22" height="16" rx="5"/><path class="yt-play" d="M10 8.5v7l6-3.5z"/></svg>
+          YouTube
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© Je Raconte, Tu T'envoles — Conte &amp; Musique</span>
+    <span>Site conçu avec soin</span>
+  </div>
+</footer>
+
+
+<script src="../blocs-render.js"></script>
+<script src="../nav.js"></script>
+</body>
+</html>

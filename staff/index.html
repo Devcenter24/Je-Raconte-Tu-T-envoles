@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; media-src 'self' data: https:; connect-src 'self' https://*.supabase.co;">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff — Je Raconte, Tu T'envoles</title>
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Literata:ital,wght@0,400;0,500;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.2/dist/umd/supabase.js" integrity="sha384-yifgV8iFWyp5cgu+V1G1rtlEHpEErPlL5fTrkUELIsWq0CIVDON2WP/NlXVJT3vO" crossorigin="anonymous"></script>
+<script src="../config.js"></script>
+</head>
+<body>
+
+<div id="staff-lock" class="staff-lock-overlay">
+  <form id="staff-lock-form" class="staff-lock-form">
+    <div class="acte-tag acte-tag-centre">Espace privé</div>
+    <h1 class="titre staff-lock-titre">Accès <em>Staff</em></h1>
+    <input type="password" id="staff-lock-code" placeholder="Code d'accès" autocomplete="off"
+      class="staff-lock-input">
+    <button type="submit" class="btn-amber staff-lock-btn">Entrer</button>
+    <p id="staff-lock-error" class="staff-lock-error">Code incorrect.</p>
+  </form>
+</div>
+
+<div id="staff-content">
+<nav>
+  <div class="brand">Je Raconte, <span>Tu T'envoles</span></div>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <ul id="nav-menu">
+    <li><a href="../index.html#compagnie">La Compagnie</a></li>
+    <li><a href="../index.html#artistes">Les Artistes</a></li>
+    <li><a href="../index.html#spectacles">Spectacles</a></li>
+    <li><a href="../index.html#ateliers">Ateliers</a></li>
+    <li><a href="../nos-contes/index.html">Nos Contes</a></li>
+    <li><a href="index.html">Staff</a></li>
+  </ul>
+</nav>
+<div class="nav-overlay" id="nav-overlay"></div>
+
+<section class="inner-page">
+  <div class="inner-wrap">
+    <div class="acte-tag">Espace privé</div>
+    <h1 class="titre">Staff — <em>Gestion des contes</em></h1>
+
+    <form class="staff-form" id="conte-form">
+      <div class="form-row">
+        <label for="titre">Titre</label>
+        <input type="text" id="titre" placeholder="Ex : Set live au Café des Arts" required>
+      </div>
+      <div class="form-row">
+        <label for="texte_libre">Texte</label>
+        <textarea id="texte_libre" rows="3" placeholder="Ex : petite description, texte libre..." required></textarea>
+      </div>
+      <div class="form-row">
+        <label for="audio">Lien vers audio</label>
+        <input type="url" id="audio" placeholder="https://...">
+      </div>
+      <div class="form-row">
+        <label for="audio-fichier">Ou importer un fichier audio</label>
+        <input type="file" id="audio-fichier" accept="audio/*">
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-amber">Ajouter</button>
+        <span class="form-msg" id="form-msg">Ajouté !</span>
+      </div>
+    </form>
+
+    <div class="acte-tag">Contes enregistrés</div>
+    <div class="staff-list" id="staff-list"></div>
+
+    <div class="acte-tag acte-tag-espace">Modifier le site</div>
+    <form class="staff-form" id="site-form">
+      <div class="form-row"><label>Accroche (hero)</label><textarea id="f_hero_lead" rows="2"></textarea></div>
+      <div class="form-row"><label>La Compagnie — 1er paragraphe</label><textarea id="f_compagnie_p1" rows="4"></textarea></div>
+      <div class="form-row"><label>Bio de Pascale</label><textarea id="f_pascale_bio" rows="4"></textarea></div>
+      <div class="form-row"><label>Bio de Michel</label><textarea id="f_michel_bio" rows="4"></textarea></div>
+      <div class="form-row"><label>Spectacle 1 — Titre</label><textarea id="f_spec1_titre" rows="1"></textarea></div>
+      <div class="form-row"><label>Spectacle 1 — Description</label><textarea id="f_spec1_desc" rows="3"></textarea></div>
+      <div class="form-row"><label>Spectacle 2 — Titre</label><textarea id="f_spec2_titre" rows="1"></textarea></div>
+      <div class="form-row"><label>Spectacle 2 — Description</label><textarea id="f_spec2_desc" rows="3"></textarea></div>
+      <div class="form-row"><label>Spectacle 3 — Titre</label><textarea id="f_spec3_titre" rows="1"></textarea></div>
+      <div class="form-row"><label>Spectacle 3 — Description</label><textarea id="f_spec3_desc" rows="3"></textarea></div>
+      <div class="form-row"><label>Accroche Contact</label><textarea id="f_contact_lead" rows="2"></textarea></div>
+      <div class="form-actions">
+        <button type="submit" class="btn-amber">Enregistrer les modifications</button>
+        <span class="form-msg" id="site-form-msg">Enregistré !</span>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section class="inner-page inner-page-suite">
+  <div class="inner-wrap">
+    <div class="acte-tag">Contenus des pages (Spectacles &amp; Le + de Pascale)</div>
+
+    <form class="staff-form" id="bloc-form">
+      <div class="form-two-cols">
+        <div class="form-row">
+          <label for="bloc-categorie">Catégorie</label>
+          <select id="bloc-categorie" required>
+            <option value="spectacles_enfants">Spectacles enfants</option>
+            <option value="spectacles_adultes">Spectacle Adultes</option>
+            <option value="pascale_plus">Le + de Pascale</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="bloc-type">Type de contenu</label>
+          <select id="bloc-type" required>
+            <option value="image">Image</option>
+            <option value="texte">Texte</option>
+            <option value="audio">Audio</option>
+            <option value="lien">Lien</option>
+            <option value="separateur">Séparateur</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row" id="champ-titre">
+        <label for="bloc-titre">Titre / légende <span id="titre-optionnel">(optionnel)</span></label>
+        <input type="text" id="bloc-titre" placeholder="Ex : Photo du spectacle, titre du lien...">
+      </div>
+
+      <div class="form-row champ-conditionnel" data-pour="texte" id="champ-texte">
+        <label for="bloc-texte">Texte</label>
+        <textarea id="bloc-texte" rows="4" placeholder="Contenu du texte..."></textarea>
+      </div>
+
+      <div class="form-row champ-conditionnel" data-pour="image" id="champ-image">
+        <label for="bloc-image">Image à importer</label>
+        <input type="file" id="bloc-image" accept="image/*">
+      </div>
+
+      <div class="form-row champ-conditionnel" data-pour="audio" id="champ-audio-fichier">
+        <label for="bloc-audio-fichier">Fichier audio (ou laisse vide si tu utilises un lien ci-dessous)</label>
+        <input type="file" id="bloc-audio-fichier" accept="audio/*">
+      </div>
+      <div class="form-row champ-conditionnel" data-pour="audio" id="champ-audio-url">
+        <label for="bloc-audio-url">Lien audio (URL)</label>
+        <input type="url" id="bloc-audio-url" placeholder="https://...">
+      </div>
+
+      <div class="form-row champ-conditionnel" data-pour="lien" id="champ-lien-url">
+        <label for="bloc-lien-url">Lien (URL)</label>
+        <input type="url" id="bloc-lien-url" placeholder="https://...">
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-amber">Ajouter</button>
+        <span class="form-msg" id="bloc-form-msg">Ajouté !</span>
+      </div>
+    </form>
+
+    <div class="bloc-filtre" id="bloc-filtre">
+      <button data-cat="tous" class="actif">Tous</button>
+      <button data-cat="spectacles_enfants">Spectacles enfants</button>
+      <button data-cat="spectacles_adultes">Spectacle Adultes</button>
+      <button data-cat="pascale_plus">Le + de Pascale</button>
+    </div>
+    <div id="blocs-list"></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="footer-logo">Je Raconte, Tu T'envoles</span>
+      <p>Conte, musique et improvisation en Périgord — une compagnie qui fait voyager petits et grands.</p>
+    </div>
+    <div class="footer-nav">
+      <div class="footer-col-title">Navigation</div>
+      <div class="footer-links">
+        <a href="../index.html#compagnie">La Compagnie</a>
+        <a href="../index.html#artistes">Les Artistes</a>
+        <a href="../index.html#spectacles">Spectacles</a>
+        <a href="../index.html#ateliers">Ateliers</a>
+        <a href="../nos-contes/index.html">Nos Contes</a>
+      </div>
+    </div>
+    <div class="footer-contact-wrap">
+      <div class="footer-col-title">Contact</div>
+      <div class="footer-contact">
+        <a href="mailto:jeracontetutenvoles@gmail.com">jeracontetutenvoles@gmail.com</a>
+        <span>Pascale Gaudin — 06 28 41 26 92</span>
+        <a class="footer-youtube" href="https://www.youtube.com/@jeracontetutenvoles" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><rect class="yt-bg" x="1" y="4" width="22" height="16" rx="5"/><path class="yt-play" d="M10 8.5v7l6-3.5z"/></svg>
+          YouTube
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© Je Raconte, Tu T'envoles — Conte &amp; Musique</span>
+    <span>Site conçu avec soin</span>
+  </div>
+</footer>
+</div>
+
+<script src="../staff.js"></script>
+<script src="../nav.js"></script>
+</body>
+</html>
